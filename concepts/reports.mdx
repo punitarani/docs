@@ -1,0 +1,84 @@
+---
+title: "Reports and scoring"
+description: "Understand report structure, scores, and evidence."
+---
+
+A report summarizes the verification outcome for a completed job. It includes a score, per-claim results, identity resolution, and evidence sources.
+
+## Score overview
+
+Scores range from 0 to 100. Peepal weights each claim category as follows:
+
+- Identity: 0.3
+- Employment: 0.4
+- Education: 0.2
+- Business: 0.1
+
+Scores are adjusted by claim confidence and weights.
+
+## Identity resolution
+
+Identity resolution determines whether the person seed matches available public profiles.
+
+- `matched`
+- `ambiguous`
+- `no_match`
+
+## Report shape
+
+```json
+{
+  "job_id": "job_01HXYZ",
+  "status": "completed",
+  "score": 86,
+  "score_breakdown": {
+    "identity": 90,
+    "employment": 84,
+    "education": 80,
+    "business": 70
+  },
+  "identity_resolution": {
+    "status": "matched",
+    "confidence": 0.82,
+    "candidates": [
+      {
+        "label": "Ada Lovelace",
+        "confidence": 0.82,
+        "profile_urls": ["https://www.linkedin.com/in/ada-lovelace"]
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_key": "edu_1",
+      "claim_type": "education",
+      "status": "verified",
+      "confidence": 0.9,
+      "matched_value": {
+        "school": "University of London"
+      },
+      "evidence": [{ "source_id": "src_01HABC" }],
+      "explanation": "Evidence supports the education claim."
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "src_01HABC",
+      "url": "https://example.com/profile",
+      "domain": "example.com",
+      "title": "Profile",
+      "published_date": null,
+      "retrieved_at": "2024-06-01T12:10:00Z",
+      "method": "exa.searchAndContents",
+      "snippet": "Profile snippet",
+      "extracted": null,
+      "source_quality": 0.74
+    }
+  ],
+  "created_at": "2024-06-01T12:15:00Z"
+}
+```
+
+## Evidence sources
+
+Sources represent the URLs and snippets used to evaluate claims. Use the `sources` array in the report or the job sources endpoint to retrieve all evidence.

@@ -1,80 +1,112 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Create a verification job and fetch the report."
 ---
 
-## Get started in three steps
+## Prerequisites
 
-Get your documentation site running locally and make your first customization.
+- A Peepal project created in the dashboard
+- An API key created for that project
+- Your Peepal API base URL
 
-### Step 1: Set up your local environment
+Your API key determines the project context, so you do not include a project ID in the URL.
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+## Step 1: Create a job
 
-### Step 2: Deploy your changes
+Create a job with a person seed and at least one claim.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+```bash
+BASE_URL="https://api.example.com"
+API_KEY="peepal_key_123"
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+curl -X POST "$BASE_URL/v1/jobs" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -d '{
+    "person": {
+      "full_name": "Ada Lovelace",
+      "email": "ada@example.com",
+      "linkedin_url": "https://www.linkedin.com/in/ada-lovelace"
+    },
+    "claims": [
+      {
+        "claim_key": "edu_1",
+        "claim_type": "education",
+        "expected": {
+          "school": "University of London",
+          "degree": "Mathematics"
+        }
+      },
+      {
+        "claim_key": "emp_1",
+        "claim_type": "employment",
+        "expected": {
+          "employer": "Analytical Engines Ltd",
+          "title": "Researcher"
+        }
+      }
+    ]
+  }'
+```
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+The response includes the job ID and status. Store the `id` for the next steps.
 
-### Step 3: Go live
+## Step 2: Poll for completion
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+Jobs run asynchronously. Poll the job endpoint until the status is `completed`.
 
-## Next steps
+```bash
+curl -s "$BASE_URL/v1/jobs/$JOB_ID" \
+  -H "x-api-key: $API_KEY"
+```
 
-Now that you have your docs running, explore these key features:
+## Step 3: Fetch the report
 
-<CardGroup cols={2}>
+When the job is completed, request the report.
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+```bash
+curl -s "$BASE_URL/v1/jobs/$JOB_ID/report" \
+  -H "x-api-key: $API_KEY"
+```
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+## Advanced: Add options and webhooks
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+Use options to control depth, sources, and webhook delivery.
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+```bash
+curl -X POST "$BASE_URL/v1/jobs" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "Idempotency-Key: job_ada_001" \
+  -d '{
+    "person": {
+      "full_name": "Ada Lovelace",
+      "email": "ada@example.com"
+    },
+    "claims": [
+      {
+        "claim_key": "id_1",
+        "claim_type": "identity",
+        "expected": {
+          "github_url": "https://github.com/ada"
+        },
+        "match_rules": {
+          "match_strength": "semantic",
+          "min_confidence": 0.7
+        }
+      }
+    ],
+    "options": {
+      "depth": "deep",
+      "max_sources": 50,
+      "exa_category": "people",
+      "allow_domains": ["mit.edu"],
+      "webhook": {
+        "endpoint_id": "wh_123",
+        "events": ["job.completed", "job.failed"]
+      }
+    }
+  }'
+```
 
-</CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+Use `Idempotency-Key` when retrying create requests so you do not create duplicate jobs.

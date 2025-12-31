@@ -1,0 +1,57 @@
+---
+title: "Jobs"
+description: "Understand how verification jobs run and how to track them."
+---
+
+A job represents one verification run. It includes a person seed, a set of claims, and optional configuration. Jobs run asynchronously and move through a defined lifecycle.
+
+## Job lifecycle
+
+- `queued`: Accepted and waiting to start
+- `running`: Evidence collection and claim evaluation in progress
+- `completed`: Report is available
+- `failed`: Job ended with an error
+- `canceled`: Job was canceled before completion
+
+Use the `progress` field (0-100) to show status updates in your UI.
+
+## Job payload
+
+A job response includes the person seed, claims, and optional links to related resources.
+
+```json
+{
+  "id": "job_01HXYZ",
+  "status": "running",
+  "progress": 42,
+  "template_id": null,
+  "created_at": "2024-06-01T12:00:00Z",
+  "started_at": "2024-06-01T12:00:05Z",
+  "completed_at": null,
+  "error": null,
+  "person": {
+    "full_name": "Ada Lovelace",
+    "email": "ada@example.com"
+  },
+  "claims": [
+    {
+      "claim_key": "edu_1",
+      "claim_type": "education",
+      "expected": { "school": "University of London" }
+    }
+  ],
+  "options": {
+    "depth": "standard",
+    "max_sources": 30
+  },
+  "links": {
+    "self": "/v1/jobs/job_01HXYZ",
+    "report": "/v1/jobs/job_01HXYZ/report",
+    "sources": "/v1/jobs/job_01HXYZ/sources"
+  }
+}
+```
+
+## Canceling jobs
+
+You can cancel jobs while they are `queued` or `running`. Canceling a completed or failed job returns a conflict error.

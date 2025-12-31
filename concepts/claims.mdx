@@ -1,0 +1,58 @@
+---
+title: "Claims"
+description: "Define what you want Peepal to verify."
+---
+
+Claims tell Peepal what to verify about a person. Each claim has a unique `claim_key`, a `claim_type`, and an `expected` payload that matches the type.
+
+## Claim types
+
+- `education`: school, degree, field, start and end years
+- `employment`: employer, title, start and end dates
+- `business`: business name, domain, role
+- `identity`: email, domains, profile URLs
+
+## Basic claim example
+
+```json
+{
+  "claim_key": "edu_1",
+  "claim_type": "education",
+  "expected": {
+    "school": "University of London",
+    "degree": "Mathematics",
+    "field": "Mathematics",
+    "start_year": 1830,
+    "end_year": 1835
+  }
+}
+```
+
+## Advanced claim matching
+
+Use `match_rules` and `weight` to tune matching behavior and scoring.
+
+```json
+{
+  "claim_key": "id_1",
+  "claim_type": "identity",
+  "expected": {
+    "email_domain": "example.com",
+    "github_url": "https://github.com/ada"
+  },
+  "match_rules": {
+    "match_strength": "semantic",
+    "min_confidence": 0.7
+  },
+  "weight": 2.5
+}
+```
+
+## Claim results
+
+Each claim result includes a status and confidence score.
+
+- `verified`
+- `not_verified`
+- `inconclusive`
+- `contradiction`

@@ -1,97 +1,38 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Peepal API"
+description: "Verify education, employment, business, and identity claims with public web evidence."
 ---
 
-## Setting up
+Peepal is an AI-powered people verification API that validates claims about individuals using public web evidence. You send a person seed and a set of claims, then Peepal returns a scored report with sources and explanations.
 
-Get your documentation site up and running in minutes.
+## How verification works
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+1. Create a job with a person seed and claims.
+2. Peepal gathers sources and evaluates each claim.
+3. Fetch the report or listen for webhook events.
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Run your first verification job in minutes.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Authentication" icon="key" href="/authentication">
+    Use API keys and learn how auth works.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Jobs" icon="diagram-project" href="/concepts/jobs">
+    Understand the job lifecycle and statuses.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Webhooks" icon="bell" href="/concepts/webhooks">
+    Receive real-time updates when jobs complete.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## What you can verify
 
-Everything you need to create world-class documentation.
+- Education (schools, degrees, fields, dates)
+- Employment (employers, titles, dates)
+- Business ownership (company, role, domain)
+- Identity signals (email, LinkedIn, GitHub, websites)
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Use the dashboard
 
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+Use the dashboard to create projects, manage API keys, and configure webhooks. API requests are scoped to the project tied to your API key so you can keep environments and teams separate.

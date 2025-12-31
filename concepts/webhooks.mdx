@@ -1,0 +1,69 @@
+---
+title: "Webhooks"
+description: "Receive job updates in real time."
+---
+
+Webhooks notify your system when job events occur. Configure endpoints per project and subscribe to the events you care about.
+
+## Events
+
+- `job.created`
+- `job.started`
+- `job.progress`
+- `job.completed`
+- `job.failed`
+- `job.canceled`
+
+## Payload
+
+Each webhook delivers a JSON payload with the event and job data. Completed events include the report.
+
+```json
+{
+  "id": "evt_01HXYZ",
+  "type": "job.completed",
+  "created_at": "2024-06-01T12:15:00Z",
+  "data": {
+    "job": { "id": "job_01HXYZ", "status": "completed" },
+    "report": { "job_id": "job_01HXYZ", "status": "completed" }
+  }
+}
+```
+
+## Signing and verification
+
+Peepal signs webhook payloads using HMAC-SHA256. The signature is sent in `X-Webhook-Signature` and follows the format `t=timestamp,v1=signature` where the signature is computed over `timestamp.body`.
+
+### Prerequisites
+
+- A webhook secret from the create or rotate endpoint
+- The raw request body and headers from your webhook handler
+
+### Verify a webhook signature
+
+```ts
+import crypto from "node:crypto";
+
+export function verifySignature({ secret, body, signature, timestamp }) {
+  const data = `${timestamp}.${body}`;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(data)
+    .digest("hex");
+
+  const expectedHeader = `t=${timestamp},v1=${expected}`;
+  if (expectedHeader.length !== signature.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(
+    Buffer.from(expectedHeader),
+    Buffer.from(signature),
+  );
+}
+```
+
+Reject signatures older than 300 seconds to prevent replay attacks.
+
+## Test events
+
+Test events sent from the dashboard include the `X-Peepal-Test: true` header.

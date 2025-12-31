@@ -1,0 +1,18 @@
+---
+title: "Projects"
+description: "Organize verification jobs and API keys by project."
+---
+
+Projects scope your data and API access. Every API request is scoped by the API key's project, so you can separate production, staging, and customer environments.
+
+## Create a project
+
+Use the dashboard to create a project and generate an API key for it. The API key determines the project context for all `/v1` requests, so you do not include a project ID in the URL.
+
+## Manage API keys
+
+API keys are created per project in the dashboard. Use a different key for each environment and rotate keys regularly.
+
+## Webhook configuration
+
+You can configure webhook endpoints per project in the dashboard or via the API. Each endpoint can subscribe to specific job events.

@@ -1,0 +1,48 @@
+---
+title: "Templates"
+description: "Reuse structured verification logic across jobs."
+---
+
+Templates let you reuse structured verification logic. A template defines input schemas, extraction rules, search plans, and scoring rubrics. Jobs can reference a template by ID.
+
+## Template fields
+
+- `input_schema`: JSON Schema describing expected input
+- `extraction_schema`: JSON Schema describing extracted evidence
+- `search_plan`: Search strategy configuration
+- `scoring_rubric`: Scoring logic for claims and evidence
+
+## Basic template example
+
+```json
+{
+  "name": "Founder verification",
+  "version": 1,
+  "description": "Verify founder background",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "company": { "type": "string" }
+    }
+  },
+  "extraction_schema": {
+    "type": "object",
+    "properties": {
+      "founder": { "type": "string" }
+    }
+  },
+  "search_plan": {
+    "queries": ["founder", "company press release"]
+  },
+  "scoring_rubric": {
+    "weights": {
+      "identity": 0.3,
+      "business": 0.7
+    }
+  }
+}
+```
+
+## Versioning and deprecation
+
+Templates include a required integer `version`. When you deprecate a template, it remains readable but is excluded from the list endpoint.

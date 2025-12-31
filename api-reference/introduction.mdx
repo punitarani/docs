@@ -1,33 +1,26 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API reference"
+description: "Endpoints, schemas, and authentication for the Peepal API."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+The Peepal API is organized around projects. All protected endpoints are under `/v1`, and your API key determines the project scope, so you do not include a project ID in the path.
 
-## Welcome
+## Base URL
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Use your Peepal API base URL when calling endpoints.
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```text
+https://api.example.com
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Authenticate with an API key using the `x-api-key` header.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+## Idempotency
+
+Use `Idempotency-Key` with job creation requests to safely retry.
+
+## Errors
+
+Errors follow RFC 7807 Problem Details. See the [Errors](/guides/errors) guide for details.

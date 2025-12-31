@@ -1,0 +1,48 @@
+---
+title: "Pagination and idempotency"
+description: "Paginate list endpoints and safely retry requests."
+---
+
+## Pagination
+
+List endpoints use cursor-based pagination with `limit` and `cursor` query parameters.
+
+### Prerequisites
+
+- An API key scoped to your project
+- A list endpoint to query
+
+### Example
+
+```bash
+curl -s "$BASE_URL/v1/jobs?limit=25" \
+  -H "x-api-key: $API_KEY"
+```
+
+The response includes `next_cursor`. Pass that value in the next request to continue.
+
+```bash
+curl -s "$BASE_URL/v1/jobs?limit=25&cursor=2024-06-01T12:00:00Z" \
+  -H "x-api-key: $API_KEY"
+```
+
+## Idempotency
+
+Use the `Idempotency-Key` header when creating jobs to avoid duplicates on retries. Keys are stored for 24 hours.
+
+```bash
+curl -X POST "$BASE_URL/v1/jobs" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -H "Idempotency-Key: job_ada_001" \
+  -d '{
+    "person": { "full_name": "Ada Lovelace" },
+    "claims": [
+      {
+        "claim_key": "edu_1",
+        "claim_type": "education",
+        "expected": { "school": "University of London" }
+      }
+    ]
+  }'
+```

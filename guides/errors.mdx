@@ -1,0 +1,36 @@
+---
+title: "Errors"
+description: "Handle errors using RFC 7807 problem details."
+---
+
+Peepal returns errors in RFC 7807 Problem Details format.
+
+## Error shape
+
+```json
+{
+  "type": "https://peepal.dev/problems/validation-error",
+  "title": "Validation Error",
+  "status": 400,
+  "detail": "Request validation failed",
+  "request_id": "req_01HXYZ",
+  "errors": [
+    {
+      "path": "person.full_name",
+      "message": "Required"
+    }
+  ]
+}
+```
+
+## Common status codes
+
+- 400: Validation or bad request
+- 401: Missing or invalid authentication
+- 404: Resource not found
+- 409: Conflict (for example, canceling a completed job)
+- 500: Internal error
+
+## Request IDs
+
+Every error includes `request_id`. Log this value in your systems so you can trace failures.

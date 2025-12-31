@@ -1,0 +1,29 @@
+---
+title: "Authentication"
+description: "Authenticate requests using API keys."
+---
+
+All `/v1/*` endpoints require an API key. `/v1/health` is public.
+
+## Use an API key
+
+Send your API key in the `x-api-key` header.
+
+```bash
+curl -s "$BASE_URL/v1/jobs" \
+  -H "x-api-key: $API_KEY"
+```
+
+API keys are managed in the dashboard. Each key is scoped to a single project, and the API uses that scope to select data. Keep keys secure and rotate them if they are exposed.
+
+## Session authentication
+
+Session cookies are used by the dashboard UI, but the public API still requires `x-api-key` for all `/v1/*` endpoints.
+
+## Rate limits
+
+API keys are rate limited to 100 requests per minute. If you need higher limits, contact support.
+
+## Request IDs
+
+Every response includes a `Request-Id` header. Use it when contacting support or when tracing errors.
