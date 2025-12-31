@@ -12,13 +12,13 @@ Use this endpoint to poll a job until it reaches a terminal state (`completed`, 
 <Panel>
   <Info>
     **Quick Test Tips**
-    
+
     1. Use a job ID from a previously created job
     2. Check the `status` field to see current state
     3. Monitor `progress` (0-100) during processing
     4. When `status` is "completed", fetch the report
   </Info>
-  
+
   <Tip>
     Poll every 2-5 seconds for active jobs. Use webhooks to avoid polling entirely.
   </Tip>
@@ -42,10 +42,10 @@ headers = {"x-api-key": "YOUR_API_KEY"}
 while True:
     response = requests.get(url, headers=headers)
     job = response.json()
-    
+
     if job["status"] in ["completed", "failed", "canceled"]:
         break
-    
+
     print(f"Progress: {job['progress']}%")
     time.sleep(3)
 
@@ -125,4 +125,3 @@ const job: Job = await response.json();
 ```
 
 </ResponseExample>
-

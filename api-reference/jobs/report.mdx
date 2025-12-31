@@ -12,14 +12,14 @@ Reports are only available for jobs with `status: "completed"`. Attempting to fe
 <Panel>
   <Info>
     **Understanding the Report**
-    
+
     - **score**: Overall verification score (0-100)
     - **score_breakdown**: Scores by category (identity, employment, education, business)
     - **identity_resolution**: How well we matched the person
     - **claims**: Individual claim verification results
     - **sources**: All evidence used in verification
   </Info>
-  
+
   <Tip>
     Each claim includes an `explanation` field describing why it was verified or not.
   </Tip>
@@ -149,4 +149,3 @@ const report: Report = await response.json();
 ```
 
 </ResponseExample>
-

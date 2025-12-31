@@ -13,13 +13,13 @@ Retrieve a paginated list of webhook delivery attempts, with optional filtering 
 <Panel>
   <Info>
     **Debugging Webhooks**
-    
+
     - Check `status` to see if delivery succeeded
     - Review `response_code` for HTTP status
     - Read `error` field for failure details
     - Use `attempt` to track retries
   </Info>
-  
+
   <Tip>
     Filter by `endpoint_id` to debug a specific webhook endpoint.
   </Tip>
@@ -87,4 +87,3 @@ const deliveries = await response.json();
 ```
 
 </ResponseExample>
-

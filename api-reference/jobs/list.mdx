@@ -12,13 +12,13 @@ This endpoint uses cursor-based pagination. Use the `next_cursor` from the respo
 <Panel>
   <Info>
     **Quick Test Tips**
-    
+
     1. Start without filters to see all recent jobs
     2. Use `status` filter to find jobs in a specific state
     3. Combine `created_after` and `created_before` for date ranges
     4. Adjust `limit` (1-100) to control page size
   </Info>
-  
+
   <Tip>
     The default limit is 25. Increase it to fetch more jobs per request.
   </Tip>
@@ -116,4 +116,3 @@ const jobs: PaginatedJobs = await response.json();
 ```
 
 </ResponseExample>
-

@@ -17,13 +17,13 @@ Create a webhook endpoint to receive real-time notifications about job events. T
 <Panel>
   <Info>
     **Webhook Security**
-    
+
     - Save the returned `secret` securely
     - Use it to verify webhook signatures
     - The secret is only shown once at creation
     - Rotate the secret if compromised
   </Info>
-  
+
   <Tip>
     Start with `job.completed` and `job.failed` for essential notifications.
   </Tip>
@@ -101,4 +101,3 @@ const endpoint = await response.json();
 ```
 
 </ResponseExample>
-
