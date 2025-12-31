@@ -16,7 +16,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://peepal-web.vercel.app/dashboard"
+      "href": "https://peepal.dev/dashboard"
     }
   },
   "navigation": {
