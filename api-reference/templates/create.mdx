@@ -2,3 +2,103 @@
 title: "Create a template"
 openapi: "POST /v1/templates"
 ---
+
+Create a reusable verification template with predefined schemas, search strategies, and scoring rules. Templates streamline job creation for common verification scenarios.
+
+<Panel>
+  <Info>
+    **Template Benefits**
+    
+    - **Consistency**: Same verification logic across jobs
+    - **Efficiency**: Pre-configured search and scoring
+    - **Version Control**: Track template versions over time
+    - **Reusability**: Reference by ID when creating jobs
+  </Info>
+  
+  <Tip>
+    Use templates for recurring verification patterns like employee onboarding or vendor verification.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.peepal.dev/v1/templates" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{
+    "name": "Employee Verification",
+    "version": 1,
+    "description": "Standard employee background check",
+    "input_schema": {},
+    "extraction_schema": {},
+    "search_plan": {},
+    "scoring_rubric": {}
+  }'
+```
+
+```python Python
+import requests
+
+url = "https://api.peepal.dev/v1/templates"
+headers = {
+    "Content-Type": "application/json",
+    "x-api-key": "YOUR_API_KEY"
+}
+payload = {
+    "name": "Employee Verification",
+    "version": 1,
+    "description": "Standard employee background check",
+    "input_schema": {},
+    "extraction_schema": {},
+    "search_plan": {},
+    "scoring_rubric": {}
+}
+
+response = requests.post(url, json=payload, headers=headers)
+template = response.json()
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.peepal.dev/v1/templates', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': 'YOUR_API_KEY'
+  },
+  body: JSON.stringify({
+    name: 'Employee Verification',
+    version: 1,
+    description: 'Standard employee background check',
+    input_schema: {},
+    extraction_schema: {},
+    search_plan: {},
+    scoring_rubric: {}
+  })
+});
+
+const template = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201 Created
+{
+  "id": "tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "name": "Employee Verification",
+  "version": 1,
+  "description": "Standard employee background check",
+  "created_at": "2025-12-31T10:00:00Z",
+  "deprecated_at": null,
+  "input_schema": {},
+  "extraction_schema": {},
+  "search_plan": {},
+  "scoring_rubric": {},
+  "metadata": {}
+}
+```
+
+</ResponseExample>
+

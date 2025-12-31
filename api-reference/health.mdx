@@ -2,3 +2,60 @@
 title: "Health check"
 openapi: "GET /v1/health"
 ---
+
+Check the API health status. This endpoint requires no authentication and can be used for monitoring and uptime checks.
+
+<Panel>
+  <Info>
+    **Monitoring Tips**
+    
+    - No authentication required
+    - Returns 200 OK when healthy
+    - Include current server timestamp
+    - Use for health checks and status pages
+  </Info>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.peepal.dev/v1/health"
+```
+
+```python Python
+import requests
+
+response = requests.get("https://api.peepal.dev/v1/health")
+health = response.json()
+print(f"Status: {health['status']}")
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.peepal.dev/v1/health');
+const health = await response.json();
+console.log(`Status: ${health.status}`);
+```
+
+```typescript TypeScript
+interface HealthResponse {
+  status: string;
+  time: string;
+}
+
+const response = await fetch('https://api.peepal.dev/v1/health');
+const health: HealthResponse = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "status": "ok",
+  "time": "2025-12-31T10:00:00.000Z"
+}
+```
+
+</ResponseExample>
+

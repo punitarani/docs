@@ -2,3 +2,151 @@
 title: "Get a report"
 openapi: "GET /v1/jobs/{job_id}/report"
 ---
+
+Retrieve the verification report for a completed job. This includes the overall score, claim results, identity resolution, and all evidence sources.
+
+## Report Availability
+
+Reports are only available for jobs with `status: "completed"`. Attempting to fetch a report for an incomplete job will return a 409 Conflict error.
+
+<Panel>
+  <Info>
+    **Understanding the Report**
+    
+    - **score**: Overall verification score (0-100)
+    - **score_breakdown**: Scores by category (identity, employment, education, business)
+    - **identity_resolution**: How well we matched the person
+    - **claims**: Individual claim verification results
+    - **sources**: All evidence used in verification
+  </Info>
+  
+  <Tip>
+    Each claim includes an `explanation` field describing why it was verified or not.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/report" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+job_id = "job_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+url = f"https://api.peepal.dev/v1/jobs/{job_id}/report"
+headers = {"x-api-key": "YOUR_API_KEY"}
+
+response = requests.get(url, headers=headers)
+report = response.json()
+
+print(f"Score: {report['score']}/100")
+for claim in report['claims']:
+    print(f"{claim['claim_key']}: {claim['status']}")
+```
+
+```javascript JavaScript
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}/report`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const report = await response.json();
+console.log(`Overall Score: ${report.score}/100`);
+```
+
+```typescript TypeScript
+interface Report {
+  job_id: string;
+  status: 'completed';
+  score: number;
+  score_breakdown: {
+    identity: number;
+    employment: number;
+    education: number;
+    business: number;
+  };
+  claims: ClaimResult[];
+  sources: Source[];
+  created_at: string;
+}
+
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}/report`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const report: Report = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "job_id": "job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "status": "completed",
+  "score": 85,
+  "score_breakdown": {
+    "identity": 92,
+    "employment": 88,
+    "education": 75,
+    "business": 0
+  },
+  "identity_resolution": {
+    "status": "matched",
+    "confidence": 0.92,
+    "candidates": [
+      {
+        "label": "Ada Lovelace - University of London",
+        "confidence": 0.92,
+        "profile_urls": [
+          "https://www.linkedin.com/in/ada-lovelace"
+        ]
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_key": "edu_1",
+      "claim_type": "education",
+      "status": "verified",
+      "confidence": 0.85,
+      "matched_value": {
+        "school": "University of London",
+        "degree": "Mathematics"
+      },
+      "evidence": [
+        {"source_id": "src_01ARZ3NDEKTSV4RRFFQ69G5FAX"}
+      ],
+      "explanation": "Found clear evidence on LinkedIn profile and university records"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "src_01ARZ3NDEKTSV4RRFFQ69G5FAX",
+      "url": "https://www.linkedin.com/in/ada-lovelace",
+      "domain": "linkedin.com",
+      "title": "Ada Lovelace | LinkedIn",
+      "retrieved_at": "2025-12-31T10:01:15Z",
+      "method": "exa.searchAndContents"
+    }
+  ],
+  "warnings": [],
+  "created_at": "2025-12-31T10:02:30Z"
+}
+```
+
+</ResponseExample>
+

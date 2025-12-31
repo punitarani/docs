@@ -112,6 +112,11 @@
     "auth": {
       "method": "key",
       "name": "x-api-key"
+    },
+    "examples": {
+      "languages": ["curl", "python", "javascript", "typescript"],
+      "defaults": "required",
+      "prefill": true
     }
   }
 }

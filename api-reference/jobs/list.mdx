@@ -2,3 +2,118 @@
 title: "List jobs"
 openapi: "GET /v1/jobs"
 ---
+
+Retrieve a paginated list of jobs for your project, with optional filtering by status and date range.
+
+## Pagination
+
+This endpoint uses cursor-based pagination. Use the `next_cursor` from the response to fetch the next page.
+
+<Panel>
+  <Info>
+    **Quick Test Tips**
+    
+    1. Start without filters to see all recent jobs
+    2. Use `status` filter to find jobs in a specific state
+    3. Combine `created_after` and `created_before` for date ranges
+    4. Adjust `limit` (1-100) to control page size
+  </Info>
+  
+  <Tip>
+    The default limit is 25. Increase it to fetch more jobs per request.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.peepal.dev/v1/jobs?limit=25&status=completed" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+url = "https://api.peepal.dev/v1/jobs"
+headers = {"x-api-key": "YOUR_API_KEY"}
+params = {
+    "limit": 25,
+    "status": "completed"
+}
+
+response = requests.get(url, headers=headers, params=params)
+jobs = response.json()
+
+# Paginate through all results
+while jobs.get("next_cursor"):
+    params["cursor"] = jobs["next_cursor"]
+    response = requests.get(url, headers=headers, params=params)
+    jobs = response.json()
+```
+
+```javascript JavaScript
+const url = new URL('https://api.peepal.dev/v1/jobs');
+url.searchParams.set('limit', '25');
+url.searchParams.set('status', 'completed');
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const jobs = await response.json();
+```
+
+```typescript TypeScript
+interface PaginatedJobs {
+  data: Job[];
+  next_cursor: string | null;
+}
+
+const url = new URL('https://api.peepal.dev/v1/jobs');
+url.searchParams.set('limit', '25');
+url.searchParams.set('status', 'completed');
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const jobs: PaginatedJobs = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "data": [
+    {
+      "id": "job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+      "status": "completed",
+      "progress": 100,
+      "template_id": null,
+      "created_at": "2025-12-31T10:00:00Z",
+      "started_at": "2025-12-31T10:00:05Z",
+      "completed_at": "2025-12-31T10:02:30Z",
+      "error": null,
+      "person": {
+        "full_name": "Ada Lovelace"
+      },
+      "claims": [],
+      "links": {
+        "self": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+        "report": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/report",
+        "sources": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/sources"
+      }
+    }
+  ],
+  "next_cursor": "job_01ARZ3NDEKTSV4RRFFQ69G5FAZ"
+}
+```
+
+</ResponseExample>
+

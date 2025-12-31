@@ -2,3 +2,127 @@
 title: "Get a job"
 openapi: "GET /v1/jobs/{job_id}"
 ---
+
+Retrieve the details and current status of a specific job by its ID.
+
+## Polling for Completion
+
+Use this endpoint to poll a job until it reaches a terminal state (`completed`, `failed`, or `canceled`).
+
+<Panel>
+  <Info>
+    **Quick Test Tips**
+    
+    1. Use a job ID from a previously created job
+    2. Check the `status` field to see current state
+    3. Monitor `progress` (0-100) during processing
+    4. When `status` is "completed", fetch the report
+  </Info>
+  
+  <Tip>
+    Poll every 2-5 seconds for active jobs. Use webhooks to avoid polling entirely.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+import time
+
+url = "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+headers = {"x-api-key": "YOUR_API_KEY"}
+
+# Poll until complete
+while True:
+    response = requests.get(url, headers=headers)
+    job = response.json()
+    
+    if job["status"] in ["completed", "failed", "canceled"]:
+        break
+    
+    print(f"Progress: {job['progress']}%")
+    time.sleep(3)
+
+print(f"Job {job['status']}")
+```
+
+```javascript JavaScript
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const job = await response.json();
+console.log(`Status: ${job.status}, Progress: ${job.progress}%`);
+```
+
+```typescript TypeScript
+interface Job {
+  id: string;
+  status: 'created' | 'queued' | 'running' | 'completed' | 'failed' | 'canceled';
+  progress: number;
+  created_at: string;
+  started_at: string | null;
+  completed_at: string | null;
+  error: string | null;
+}
+
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const job: Job = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK (Running)
+{
+  "id": "job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "status": "running",
+  "progress": 45,
+  "template_id": null,
+  "created_at": "2025-12-31T10:00:00Z",
+  "started_at": "2025-12-31T10:00:05Z",
+  "completed_at": null,
+  "error": null,
+  "person": {
+    "full_name": "Ada Lovelace",
+    "email": "ada@example.com"
+  },
+  "claims": [
+    {
+      "claim_key": "edu_1",
+      "claim_type": "education",
+      "expected": {
+        "school": "University of London"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+    "report": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/report",
+    "sources": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/sources"
+  }
+}
+```
+
+</ResponseExample>
+

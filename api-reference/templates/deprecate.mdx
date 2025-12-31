@@ -2,3 +2,71 @@
 title: "Deprecate a template"
 openapi: "POST /v1/templates/{template_id}/deprecate"
 ---
+
+Mark a template as deprecated. Deprecated templates remain accessible but should not be used for new jobs. Existing jobs using the template are not affected.
+
+<Panel>
+  <Warning>
+    **Deprecation is Permanent**
+    
+    Once deprecated, a template cannot be un-deprecated. Create a new version instead.
+  </Warning>
+  
+  <Tip>
+    Use versioning (`version` field) to create updated templates while keeping old ones deprecated.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.peepal.dev/v1/templates/tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV/deprecate" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+template_id = "tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+url = f"https://api.peepal.dev/v1/templates/{template_id}/deprecate"
+headers = {"x-api-key": "YOUR_API_KEY"}
+
+response = requests.post(url, headers=headers)
+template = response.json()
+```
+
+```javascript JavaScript
+const templateId = 'tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/templates/${templateId}/deprecate`;
+
+const response = await fetch(url, {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const template = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "name": "Employee Verification",
+  "version": 1,
+  "description": "Standard employee background check",
+  "created_at": "2025-12-31T10:00:00Z",
+  "deprecated_at": "2025-12-31T11:00:00Z",
+  "input_schema": {},
+  "extraction_schema": {},
+  "search_plan": {},
+  "scoring_rubric": {}
+}
+```
+
+</ResponseExample>
+

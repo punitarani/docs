@@ -2,3 +2,124 @@
 title: "List sources"
 openapi: "GET /v1/jobs/{job_id}/sources"
 ---
+
+Retrieve a paginated list of all evidence sources collected during job processing. Sources include web pages, profiles, and documents used to verify claims.
+
+## Source Quality
+
+Each source includes a `source_quality` score (0-1) indicating relevance and reliability.
+
+<Panel>
+  <Info>
+    **Source Information**
+    
+    - **url**: The web page or document URL
+    - **domain**: Extracted domain for filtering
+    - **title**: Page title if available
+    - **method**: How the source was retrieved
+    - **snippet**: Relevant excerpt from the content
+    - **extracted**: Structured data extracted from the source
+  </Info>
+  
+  <Tip>
+    Use this endpoint to audit what evidence was used in verification.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/sources?limit=25" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+job_id = "job_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+url = f"https://api.peepal.dev/v1/jobs/{job_id}/sources"
+headers = {"x-api-key": "YOUR_API_KEY"}
+params = {"limit": 25}
+
+response = requests.get(url, headers=headers, params=params)
+sources = response.json()
+
+for source in sources["data"]:
+    print(f"{source['domain']}: {source['title']}")
+```
+
+```javascript JavaScript
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}/sources?limit=25`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const sources = await response.json();
+```
+
+```typescript TypeScript
+interface Source {
+  source_id: string;
+  url: string;
+  domain: string;
+  title: string | null;
+  published_date: string | null;
+  retrieved_at: string;
+  method: 'exa.searchAndContents' | 'exa.getContents' | 'cf.browser.json';
+  snippet: string | null;
+  source_quality: number | null;
+}
+
+interface PaginatedSources {
+  data: Source[];
+  next_cursor: string | null;
+}
+
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}/sources?limit=25`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const sources: PaginatedSources = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "data": [
+    {
+      "source_id": "src_01ARZ3NDEKTSV4RRFFQ69G5FAX",
+      "url": "https://www.linkedin.com/in/ada-lovelace",
+      "domain": "linkedin.com",
+      "title": "Ada Lovelace | LinkedIn",
+      "published_date": null,
+      "retrieved_at": "2025-12-31T10:01:15Z",
+      "method": "exa.searchAndContents",
+      "snippet": "Ada Lovelace · Education: University of London · Mathematics degree",
+      "extracted": {
+        "education": [
+          {
+            "school": "University of London",
+            "degree": "Mathematics"
+          }
+        ]
+      },
+      "source_quality": 0.92
+    }
+  ],
+  "next_cursor": null
+}
+```
+
+</ResponseExample>

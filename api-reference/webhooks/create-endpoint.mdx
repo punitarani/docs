@@ -2,3 +2,103 @@
 title: "Create a webhook endpoint"
 openapi: "POST /v1/webhooks/endpoints"
 ---
+
+Create a webhook endpoint to receive real-time notifications about job events. The endpoint URL will receive POST requests with event payloads.
+
+## Event Types
+
+- `job.created` - Job was created
+- `job.started` - Job processing started
+- `job.progress` - Job progress updated
+- `job.completed` - Job finished successfully
+- `job.failed` - Job failed with error
+- `job.canceled` - Job was canceled
+
+<Panel>
+  <Info>
+    **Webhook Security**
+    
+    - Save the returned `secret` securely
+    - Use it to verify webhook signatures
+    - The secret is only shown once at creation
+    - Rotate the secret if compromised
+  </Info>
+  
+  <Tip>
+    Start with `job.completed` and `job.failed` for essential notifications.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.peepal.dev/v1/webhooks/endpoints" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{
+    "url": "https://your-app.com/webhooks/peepal",
+    "events": ["job.completed", "job.failed"],
+    "enabled": true,
+    "description": "Production webhook endpoint"
+  }'
+```
+
+```python Python
+import requests
+
+url = "https://api.peepal.dev/v1/webhooks/endpoints"
+headers = {
+    "Content-Type": "application/json",
+    "x-api-key": "YOUR_API_KEY"
+}
+payload = {
+    "url": "https://your-app.com/webhooks/peepal",
+    "events": ["job.completed", "job.failed"],
+    "enabled": True,
+    "description": "Production webhook endpoint"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+endpoint = response.json()
+
+# Save the secret securely
+secret = endpoint["secret"]
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.peepal.dev/v1/webhooks/endpoints', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-api-key': 'YOUR_API_KEY'
+  },
+  body: JSON.stringify({
+    url: 'https://your-app.com/webhooks/peepal',
+    events: ['job.completed', 'job.failed'],
+    enabled: true,
+    description: 'Production webhook endpoint'
+  })
+});
+
+const endpoint = await response.json();
+// Save endpoint.secret securely
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 201 Created
+{
+  "id": "wh_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "url": "https://your-app.com/webhooks/peepal",
+  "events": ["job.completed", "job.failed"],
+  "enabled": true,
+  "description": "Production webhook endpoint",
+  "created_at": "2025-12-31T10:00:00Z",
+  "secret": "whsec_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+}
+```
+
+</ResponseExample>
+

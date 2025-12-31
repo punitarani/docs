@@ -2,3 +2,65 @@
 title: "Get a template"
 openapi: "GET /v1/templates/{template_id}"
 ---
+
+Retrieve the full details of a specific template including all schemas and configurations.
+
+<Panel>
+  <Info>
+    Use this endpoint to review template configuration before using it in a job.
+  </Info>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.peepal.dev/v1/templates/tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+template_id = "tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+url = f"https://api.peepal.dev/v1/templates/{template_id}"
+headers = {"x-api-key": "YOUR_API_KEY"}
+
+response = requests.get(url, headers=headers)
+template = response.json()
+```
+
+```javascript JavaScript
+const templateId = 'tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/templates/${templateId}`;
+
+const response = await fetch(url, {
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const template = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "tpl_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "name": "Employee Verification",
+  "version": 1,
+  "description": "Standard employee background check",
+  "created_at": "2025-12-31T10:00:00Z",
+  "deprecated_at": null,
+  "input_schema": {},
+  "extraction_schema": {},
+  "search_plan": {},
+  "scoring_rubric": {},
+  "metadata": {}
+}
+```
+
+</ResponseExample>
+

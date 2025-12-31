@@ -2,3 +2,99 @@
 title: "Cancel a job"
 openapi: "POST /v1/jobs/{job_id}/cancel"
 ---
+
+Cancel a job that is currently queued or running. Completed or failed jobs cannot be canceled.
+
+## When to Cancel
+
+- Job was created by mistake
+- Requirements changed
+- Cost control (stop expensive verification)
+- User requested cancellation
+
+<Panel>
+  <Warning>
+    **Cancellation is Immediate**
+    
+    Once canceled, the job cannot be resumed. Any partial results are discarded.
+  </Warning>
+  
+  <Tip>
+    You can only cancel jobs in "queued" or "running" status.
+  </Tip>
+</Panel>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/cancel" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+job_id = "job_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+url = f"https://api.peepal.dev/v1/jobs/{job_id}/cancel"
+headers = {"x-api-key": "YOUR_API_KEY"}
+
+response = requests.post(url, headers=headers)
+canceled_job = response.json()
+```
+
+```javascript JavaScript
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}/cancel`;
+
+const response = await fetch(url, {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const canceledJob = await response.json();
+```
+
+```typescript TypeScript
+const jobId = 'job_01ARZ3NDEKTSV4RRFFQ69G5FAV';
+const url = `https://api.peepal.dev/v1/jobs/${jobId}/cancel`;
+
+const response = await fetch(url, {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'YOUR_API_KEY'
+  }
+});
+
+const canceledJob: Job = await response.json();
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 OK
+{
+  "id": "job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "status": "canceled",
+  "progress": 35,
+  "template_id": null,
+  "created_at": "2025-12-31T10:00:00Z",
+  "started_at": "2025-12-31T10:00:05Z",
+  "completed_at": "2025-12-31T10:01:20Z",
+  "error": null,
+  "person": {
+    "full_name": "Ada Lovelace"
+  },
+  "claims": [],
+  "links": {
+    "self": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
+    "report": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/report",
+    "sources": "https://api.peepal.dev/v1/jobs/job_01ARZ3NDEKTSV4RRFFQ69G5FAV/sources"
+  }
+}
+```
+
+</ResponseExample>
+
