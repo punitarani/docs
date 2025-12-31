@@ -5,6 +5,12 @@
     "description": "Verify people claims using public web evidence.",
     "version": "0.0.0"
   },
+  "servers": [
+    {
+      "url": "https://api.peepal.dev",
+      "description": "Production API"
+    }
+  ],
   "security": [
     {
       "ApiKeyAuth": []
