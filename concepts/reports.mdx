@@ -7,22 +7,24 @@ A report summarizes the verification outcome for a completed job. It includes a 
 
 ## Score overview
 
-Scores range from 0 to 100. Peepal weights each claim category as follows:
+Scores range from 1 to 5 (integer). Peepal weights each claim category as follows:
 
 - Identity: 0.3
 - Employment: 0.4
 - Education: 0.2
 - Business: 0.1
 
-Scores are adjusted by claim confidence and weights.
+Scores are adjusted by claim confidence (1-5), claim status, and weights.
 
 ## Identity resolution
 
 Identity resolution determines whether the person seed matches available public profiles.
 
-- `matched`
-- `ambiguous`
-- `no_match`
+- `status`: `matched`, `ambiguous`, `no_match`
+- `confidence`: 1-5 confidence for the legacy status
+- `identity_status` (optional): `confirmed`, `high_confidence`, `likely`, `possible`, `no_match`
+- `identity_confidence` (optional): 1-5 confidence for identity status
+- `profiles` (optional): discovered profiles with type and primary flag
 
 ## Report shape
 
@@ -30,20 +32,30 @@ Identity resolution determines whether the person seed matches available public 
 {
   "job_id": "job_01HXYZ",
   "status": "completed",
-  "score": 86,
+  "score": 4,
   "score_breakdown": {
-    "identity": 90,
-    "employment": 84,
-    "education": 80,
-    "business": 70
+    "identity": 5,
+    "employment": 4,
+    "education": 3,
+    "business": 2
   },
   "identity_resolution": {
     "status": "matched",
-    "confidence": 0.82,
+    "confidence": 4,
+    "identity_status": "high_confidence",
+    "identity_confidence": 4,
+    "profiles": [
+      {
+        "url": "https://www.linkedin.com/in/ada-lovelace",
+        "type": "linkedin",
+        "title": "Ada Lovelace | LinkedIn",
+        "is_primary": true
+      }
+    ],
     "candidates": [
       {
         "label": "Ada Lovelace",
-        "confidence": 0.82,
+        "confidence": 4,
         "profile_urls": ["https://www.linkedin.com/in/ada-lovelace"]
       }
     ]
@@ -53,7 +65,7 @@ Identity resolution determines whether the person seed matches available public 
       "claim_key": "edu_1",
       "claim_type": "education",
       "status": "verified",
-      "confidence": 0.9,
+      "confidence": 4,
       "matched_value": {
         "school": "University of London"
       },

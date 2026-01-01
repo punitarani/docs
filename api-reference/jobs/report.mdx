@@ -13,11 +13,12 @@ Reports are only available for jobs with `status: "completed"`. Attempting to fe
   <Info>
     **Understanding the Report**
 
-    - **score**: Overall verification score (0-100)
-    - **score_breakdown**: Scores by category (identity, employment, education, business)
+    - **score**: Overall verification score (1-5)
+    - **score_breakdown**: Scores by category (identity, employment, education, business), each 1-5
     - **identity_resolution**: How well we matched the person
     - **claims**: Individual claim verification results
     - **sources**: All evidence used in verification
+    - **confidence values**: All confidence fields use a 1-5 scale
   </Info>
 
   <Tip>
@@ -42,7 +43,7 @@ headers = {"x-api-key": "YOUR_API_KEY"}
 response = requests.get(url, headers=headers)
 report = response.json()
 
-print(f"Score: {report['score']}/100")
+print(f"Score: {report['score']}/5")
 for claim in report['claims']:
     print(f"{claim['claim_key']}: {claim['status']}")
 ```
@@ -58,7 +59,7 @@ const response = await fetch(url, {
 });
 
 const report = await response.json();
-console.log(`Overall Score: ${report.score}/100`);
+console.log(`Overall Score: ${report.score}/5`);
 ```
 
 ```typescript TypeScript
@@ -71,6 +72,23 @@ interface Report {
     employment: number;
     education: number;
     business: number;
+  };
+  identity_resolution: {
+    status: 'matched' | 'ambiguous' | 'no_match';
+    confidence: number;
+    candidates: Array<{
+      label: string;
+      confidence: number;
+      profile_urls: string[];
+    }>;
+    identity_status?: 'confirmed' | 'high_confidence' | 'likely' | 'possible' | 'no_match';
+    identity_confidence?: number;
+    profiles?: Array<{
+      url: string;
+      type: 'linkedin' | 'github' | 'personal_website' | 'portfolio' | 'twitter' | 'company_page' | 'other';
+      title: string | null;
+      is_primary: boolean;
+    }>;
   };
   claims: ClaimResult[];
   sources: Source[];
@@ -97,20 +115,30 @@ const report: Report = await response.json();
 {
   "job_id": "job_01ARZ3NDEKTSV4RRFFQ69G5FAV",
   "status": "completed",
-  "score": 85,
+  "score": 4,
   "score_breakdown": {
-    "identity": 92,
-    "employment": 88,
-    "education": 75,
-    "business": 0
+    "identity": 5,
+    "employment": 4,
+    "education": 3,
+    "business": 2
   },
   "identity_resolution": {
     "status": "matched",
-    "confidence": 0.92,
+    "confidence": 4,
+    "identity_status": "high_confidence",
+    "identity_confidence": 4,
+    "profiles": [
+      {
+        "url": "https://www.linkedin.com/in/ada-lovelace",
+        "type": "linkedin",
+        "title": "Ada Lovelace - University of London",
+        "is_primary": true
+      }
+    ],
     "candidates": [
       {
         "label": "Ada Lovelace - University of London",
-        "confidence": 0.92,
+        "confidence": 4,
         "profile_urls": [
           "https://www.linkedin.com/in/ada-lovelace"
         ]
@@ -122,7 +150,7 @@ const report: Report = await response.json();
       "claim_key": "edu_1",
       "claim_type": "education",
       "status": "verified",
-      "confidence": 0.85,
+      "confidence": 4,
       "matched_value": {
         "school": "University of London",
         "degree": "Mathematics"
